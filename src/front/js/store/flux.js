@@ -1,51 +1,97 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			user: null,
+			token: null,
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
+			login: async (email, password, navigate) => {
+				try {
+					const resp = await fetch(`${process.env.BACKEND_URL}api/login`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify({ email, password })
+					});
 
-			getMessage: async () => {
-				try{
-					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
-					const data = await resp.json()
-					setStore({ message: data.message })
-					// don't forget to return something, that is how the async resolves
-					return data;
-				}catch(error){
-					console.log("Error loading message from backend", error)
+					if (!resp.ok) {
+						throw new Error("Error al iniciar sesión");
+					}
+
+					const data = await resp.json();
+					console.log("Inicio de sesión exitoso:", data);
+
+					const token = data.token;
+					if (!token) {
+						throw new Error("No se recibió el token");
+					}
+
+					localStorage.setItem("token", token);
+					setStore({ token });
+
+					const actions = getActions();
+					actions.getUser();
+					navigate("/dashboard");
+				} catch (error) {
+					console.log("Error al iniciar sesión", error);
+					alert("Error al iniciar sesión");
 				}
 			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+			signup: async (dataUser, navigate) => {
+				try {
+					const resp = await fetch(`${process.env.BACKEND_URL}api/signup`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify(dataUser)
+					});
+			
+					if (!resp.ok) {
+						throw new Error("Error en el registro");
+					}
+			
+					const data = await resp.json();
+					console.log("Usuario registrado exitosamente", data);
+			
+					const token = data.token; 
+					if (!token) {
+						throw new Error("No se recibió el token");
+					}
+			
+					localStorage.setItem("token", token);
+					setStore({ token });
+			
+					const actions = getActions();
+					actions.getUser();
+					navigate("/dashboard");
+				} catch (error) {
+				}
+			},
+			getUser: async () => {
+				try {
+					const token = localStorage.getItem("token");
+					if (!token) throw new Error("No token found");
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+					const resp = await fetch(`${process.env.BACKEND_URL}api/user`, {
+						headers: {
+							"Authorization": `Bearer ${token}`
+						}
+					});
 
-				//reset the global store
-				setStore({ demo: demo });
+					if (!resp.ok) throw new Error("Error al obtener el usuario");
+
+					const data = await resp.json();
+					setStore({ user: data });
+				} catch (error) {
+					console.log("Error al obtener usuario", error);
+				}
+			},
+			logout: () => {
+				localStorage.removeItem('token');
+				setStore({token: null, user: null})
+				
 			}
 		}
 	};
