@@ -1,32 +1,25 @@
-/*
-    home.css: This website contains selectors only used in home.css
-
-    All pages share the styles on index.css but you should create 
-    one more css for each page that will contain the selected used 
-    on that page only (the ones not reused in other pages).
-*/
 /* Contenedor principal */
 .registration-view-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #ffffff;
+    background-color: #f4f6f9;
     font-family: 'Roboto', sans-serif;
 }
 
 /* Contenedor del formulario */
 .form-container {
-    background-color: #121212;
+    background-color: #ffffff;
     padding: 40px;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     width: 100%;
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Animación de aparición del contenedor */
+/* Animación de aparición */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -38,7 +31,7 @@
 
 /* Títulos de los formularios */
 h2 {
-    color: #fff;
+    color: #2c3e50;
     text-align: center;
     font-size: 1.5rem;
     margin-bottom: 20px;
@@ -54,10 +47,10 @@ h2 {
 
 .auth-form input {
     padding: 12px 15px;
-    border: 2px solid #fff;
+    border: 2px solid #ccc;
     border-radius: 5px;
     background-color: transparent;
-    color: #fff;
+    color: #34495e;
     font-size: 1rem;
     outline: none;
     transition: border 0.3s ease;
@@ -89,7 +82,7 @@ h2 {
 }
 
 .auth-form p {
-    color: #fff;
+    color: #3498db;
     text-align: center;
     cursor: pointer;
     font-size: 0.9rem;
@@ -97,7 +90,7 @@ h2 {
 }
 
 .auth-form p:hover {
-    color: #3498db;
+    color: #2980b9;
 }
 
 /* Estilos de error */

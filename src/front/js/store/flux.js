@@ -92,7 +92,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				localStorage.removeItem('token');
 				setStore({token: null, user: null})
 				
-			}
+			},
 		}
 	};
 };

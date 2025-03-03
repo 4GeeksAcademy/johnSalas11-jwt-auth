@@ -12,16 +12,6 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api, origins=["https://bookish-couscous-69r79rx657w72rq6p-3000.app.github.dev"])
 
-
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
-
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
-
-    return jsonify(response_body), 200
-
 @api.route('/signup', methods=['POST'])
 def handle_create_user():
     
@@ -38,7 +28,6 @@ def handle_create_user():
     
 
     user = User()
-    
     user.username = body["username"]
     user.email = body["email"]
     user.password = body["password"]
@@ -48,7 +37,6 @@ def handle_create_user():
     db.session.commit()
     
     return jsonify({'user': user.username}), 201
-
 
 
 @api.route('/auth', methods=['POST'])
@@ -65,13 +53,16 @@ def handle_auth():
     if "password" not in body: 
         return jsonify({'msg': 'Error'}), 400
     
+
     user = User.query.filter_by( 
          email = body["email"], 
          password = body["password"]).first()
     
+
     if user is None: 
         return jsonify({'msg': 'user not found'}), 401
     
+
     token = create_access_token(identity= user.email)
     
     
@@ -80,6 +71,7 @@ def handle_auth():
 
 @api.route('/login', methods=['POST'])
 def login_user():
+
     body = request.get_json()
 
     if not body or "email" not in body or "password" not in body:
@@ -88,8 +80,8 @@ def login_user():
     email = body["email"]
     password = body["password"]
 
+
     user = User.query.filter_by(email=email, password=password).first()
-    
     token = create_access_token(identity=str(user.email))
     user_data = {
         "id": user.id,
@@ -97,20 +89,24 @@ def login_user():
         "username": user.username,
     }
 
+
     return jsonify({
         "msg": "Inicio de sesión exitoso",
         "token": token,
         "user": user_data,
     }), 200
 
+
 @api.route('/user', methods=['GET'])
 @jwt_required()
 def get_user_info():
-    current_user_email = get_jwt_identity()  # Obtén el correo electrónico del token
-    user = User.query.filter_by(email=current_user_email).first()  # Encuentra el usuario por su email
+
+    current_user_email = get_jwt_identity()
+
+    user = User.query.filter_by(email=current_user_email).first()  
 
     if not user:
-        return jsonify({"msg": "User not found"}), 404  # Si no se encuentra el usuario, devuelve un error
+        return jsonify({"msg": "User not found"}), 
 
     user_data = {
         "id": user.id,
@@ -118,7 +114,8 @@ def get_user_info():
         "username": user.username,
     }
 
-    return jsonify(user_data), 200  # Devuelve los datos del usuario
+    return jsonify(user_data), 200
+
 
 @api.route('/dashboard', methods=['GET'])
 @jwt_required()

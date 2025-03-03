@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import "../../styles/home.css";
 
 export const RegistrationView = () => {
+
     const { actions } = useContext(Context);
     const navigate = useNavigate();
     
@@ -26,7 +27,6 @@ export const RegistrationView = () => {
             } else {
                 await actions.login(email, password, navigate);
             }
-            // Limpiar los campos después de hacer el submit
             setUsername('');
             setEmail('');
             setPassword('');
@@ -35,6 +35,7 @@ export const RegistrationView = () => {
         } finally {
             setLoading(false);
         }
+        
     };
     return (
         <div className="registration-view-container">

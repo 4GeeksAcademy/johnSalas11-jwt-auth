@@ -1,0 +1,114 @@
+/* Contenedor principal */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f6f9;
+    font-family: 'Roboto', sans-serif;
+    padding: 20px;
+}
+
+/* Contenedor del Dashboard */
+.dashboard-content {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Título principal */
+.dashboard-content h1 {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* Lista de tareas */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f1f1f1;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #34495e;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+ul li i {
+    cursor: pointer;
+    color: #e74c3c;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+ul li i:hover {
+    color: #c0392b;
+}
+
+/* Input de tareas */
+.dashboard-content input {
+    padding: 12px 15px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #34495e;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease;
+}
+
+.dashboard-content input:focus {
+    border-color: #3498db;
+}
+
+/* Tareas restantes */
+.dashboard-content .tasks-left {
+    font-size: 1rem;
+    color: #7f8c8d;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Botón de cerrar sesión */
+.btn-logout {
+    padding: 12px 25px;
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+.btn-logout:hover {
+    background-color: #c0392b;
+}
