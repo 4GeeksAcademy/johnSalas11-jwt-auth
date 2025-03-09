@@ -5,21 +5,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 			token: null,
 		},
 		actions: {
-			login: async (email, password, navigate) => {
-				try {
-					const resp = await fetch(`${process.env.BACKEND_URL}api/login`, {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json"
-						},
-						body: JSON.stringify({ email, password })
-					});
+			login: (email, password, navigate) => {
+				const resp = fetch(`${process.env.BACKEND_URL}api/login`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ email, password })
+				});
 
-					if (!resp.ok) {
+				resp.then(response => {
+					if (!response.ok) {
 						throw new Error("Error al iniciar sesión");
 					}
 
-					const data = await resp.json();
+					return response.json();
+				})
+				.then(data => {
 					console.log("Inicio de sesión exitoso:", data);
 
 					const token = data.token;
@@ -33,65 +35,76 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const actions = getActions();
 					actions.getUser();
 					navigate("/dashboard");
-				} catch (error) {
+				})
+				.catch(error => {
 					console.log("Error al iniciar sesión", error);
 					alert("Error al iniciar sesión");
-				}
+				});
 			},
-			signup: async (dataUser, navigate) => {
-				try {
-					const resp = await fetch(`${process.env.BACKEND_URL}api/signup`, {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json"
-						},
-						body: JSON.stringify(dataUser)
-					});
-			
-					if (!resp.ok) {
+			signup: (dataUser, navigate) => {
+				const resp = fetch(`${process.env.BACKEND_URL}api/signup`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify(dataUser)
+				});
+
+				resp.then(response => {
+					if (!response.ok) {
 						throw new Error("Error en el registro");
 					}
-			
-					const data = await resp.json();
+
+					return response.json();
+				})
+				.then(data => {
 					console.log("Usuario registrado exitosamente", data);
-			
-					const token = data.token; 
+
+					const token = data.token;
 					if (!token) {
 						throw new Error("No se recibió el token");
 					}
-			
+
 					localStorage.setItem("token", token);
 					setStore({ token });
-			
+
 					const actions = getActions();
 					actions.getUser();
 					navigate("/dashboard");
-				} catch (error) {
-				}
+				})
+				.catch(error => {
+				});
 			},
-			getUser: async () => {
-				try {
-					const token = localStorage.getItem("token");
-					if (!token) throw new Error("No token found");
-
-					const resp = await fetch(`${process.env.BACKEND_URL}api/user`, {
-						headers: {
-							"Authorization": `Bearer ${token}`
-						}
-					});
-
-					if (!resp.ok) throw new Error("Error al obtener el usuario");
-
-					const data = await resp.json();
-					setStore({ user: data });
-				} catch (error) {
-					console.log("Error al obtener usuario", error);
+			getUser: () => {
+				const token = localStorage.getItem("token");
+				if (!token) {
+					console.log("No token found");
+					return;
 				}
+
+				const resp = fetch(`${process.env.BACKEND_URL}api/user`, {
+					headers: {
+						"Authorization": `Bearer ${token}`
+					}
+				});
+
+				resp.then(response => {
+					if (!response.ok) {
+						throw new Error("Error al obtener el usuario");
+					}
+
+					return response.json();
+				})
+				.then(data => {
+					setStore({ user: data });
+				})
+				.catch(error => {
+					console.log("Error al obtener usuario", error);
+				});
 			},
 			logout: () => {
 				localStorage.removeItem('token');
-				setStore({token: null, user: null})
-				
+				setStore({token: null, user: null});
 			},
 		}
 	};
